@@ -5,7 +5,7 @@
 #include <string.h>
 #include <wctype.h>
 
-enum TokenType { RAW_STRING_DELIMITER, RAW_STRING_CONTENT };
+enum TokenType { RAW_STRING_DELIMITER, RAW_STRING_CONTENT, MEMBER_ACCESS_INITIALIZER_OPEN_PAREN };
 
 /// The spec limits delimiters to 16 chars
 #define MAX_DELIMITER_LENGTH 16
@@ -94,6 +94,39 @@ static bool scan_raw_string_content(Scanner *scanner, TSLexer *lexer) {
     }
 }
 
+/// Scan an initializer opening parenthesis only when its first expression starts with identifier->.
+static bool scan_member_access_initializer_open_paren(TSLexer *lexer) {
+    if (lexer->lookahead != '(') {
+        return false;
+    }
+
+    advance(lexer);
+    lexer->mark_end(lexer);
+
+    while (iswspace(lexer->lookahead)) {
+        advance(lexer);
+    }
+
+    if (!(iswalpha(lexer->lookahead) || lexer->lookahead == '_')) {
+        return false;
+    }
+
+    do {
+        advance(lexer);
+    } while (iswalnum(lexer->lookahead) || lexer->lookahead == '_');
+
+    while (iswspace(lexer->lookahead)) {
+        advance(lexer);
+    }
+
+    if (lexer->lookahead != '-') {
+        return false;
+    }
+
+    advance(lexer);
+    return lexer->lookahead == '>';
+}
+
 void *tree_sitter_cpp_external_scanner_create() {
     Scanner *scanner = (Scanner *)ts_calloc(1, sizeof(Scanner));
     memset(scanner, 0, sizeof(Scanner));
@@ -117,6 +150,11 @@ bool tree_sitter_cpp_external_scanner_scan(void *payload, TSLexer *lexer, const 
     if (valid_symbols[RAW_STRING_CONTENT]) {
         lexer->result_symbol = RAW_STRING_CONTENT;
         return scan_raw_string_content(scanner, lexer);
+    }
+
+    if (valid_symbols[MEMBER_ACCESS_INITIALIZER_OPEN_PAREN]) {
+        lexer->result_symbol = MEMBER_ACCESS_INITIALIZER_OPEN_PAREN;
+        return scan_member_access_initializer_open_paren(lexer);
     }
 
     return false;

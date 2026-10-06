@@ -4051,6 +4051,10 @@
           {
             "type": "initializer_list",
             "named": true
+          },
+          {
+            "type": "member_access_initializer_argument_list",
+            "named": true
           }
         ]
       }
@@ -4383,6 +4387,21 @@
           }
         ]
       }
+    }
+  },
+  {
+    "type": "member_access_initializer_argument_list",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "expression",
+          "named": true
+        }
+      ]
     }
   },
   {

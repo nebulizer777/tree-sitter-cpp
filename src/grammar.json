@@ -4841,6 +4841,27 @@
               "name": "declarator",
               "content": {
                 "type": "SYMBOL",
+                "name": "reference_declarator"
+              }
+            },
+            {
+              "type": "FIELD",
+              "name": "value",
+              "content": {
+                "type": "SYMBOL",
+                "name": "member_access_initializer_argument_list"
+              }
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "FIELD",
+              "name": "declarator",
+              "content": {
+                "type": "SYMBOL",
                 "name": "_declarator"
               }
             },
@@ -13004,6 +13025,57 @@
         }
       ]
     },
+    "member_access_initializer_argument_list": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "SYMBOL",
+            "name": "_member_access_initializer_open_paren"
+          },
+          "named": false,
+          "value": "("
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "expression"
+                },
+                {
+                  "type": "REPEAT",
+                  "content": {
+                    "type": "SEQ",
+                    "members": [
+                      {
+                        "type": "STRING",
+                        "value": ","
+                      },
+                      {
+                        "type": "SYMBOL",
+                        "name": "expression"
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "STRING",
+          "value": ")"
+        }
+      ]
+    },
     "operator_cast": {
       "type": "PREC_RIGHT",
       "value": 1,
@@ -18384,6 +18456,10 @@
     {
       "type": "SYMBOL",
       "name": "raw_string_content"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "_member_access_initializer_open_paren"
     }
   ],
   "inline": [

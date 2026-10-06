@@ -60,6 +60,7 @@ module.exports = grammar(C, {
   externals: $ => [
     $.raw_string_delimiter,
     $.raw_string_content,
+    $._member_access_initializer_open_paren,
   ],
 
   conflicts: $ => [
@@ -522,12 +523,21 @@ module.exports = grammar(C, {
     init_declarator: ($, original) => choice(
       original,
       seq(
+        field('declarator', $.reference_declarator),
+        field('value', $.member_access_initializer_argument_list),
+      ),
+      seq(
         field('declarator', $._declarator),
         field('value', choice(
           $.argument_list,
           $.initializer_list,
         )),
       ),
+    ),
+    member_access_initializer_argument_list: $ => seq(
+      alias($._member_access_initializer_open_paren, '('),
+      commaSep($.expression),
+      ')',
     ),
 
     operator_cast: $ => prec.right(1, seq(

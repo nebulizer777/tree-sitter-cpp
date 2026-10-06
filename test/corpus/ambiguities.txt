@@ -121,6 +121,7 @@ T3 c(T4 &d, T5 &&e);
 // Variable declarations with initializers
 T7 f(g.h);
 T6 i{j};
+const FDynamicMeshVertex& Vertex(MeshSection->Vertices[MeshSection->Indices[IndiceIndex]]);
 
 ---
 
@@ -149,7 +150,19 @@ T6 i{j};
     (type_identifier)
     (init_declarator
       (identifier)
-      (initializer_list (identifier)))))
+      (initializer_list (identifier))))
+  (declaration
+    (type_qualifier)
+    (type_identifier)
+    (init_declarator
+      (reference_declarator (identifier))
+      (member_access_initializer_argument_list
+        (subscript_expression
+          (field_expression (identifier) (field_identifier))
+          (subscript_argument_list
+            (subscript_expression
+              (field_expression (identifier) (field_identifier))
+              (subscript_argument_list (identifier)))))))))
 
 ================================================
 template classes vs relational expressions
